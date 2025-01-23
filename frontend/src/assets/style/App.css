@@ -40,11 +40,16 @@ html {
     .text {
       padding: 0 40px;
       color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
 
       h1 {
-        font-size: 45px;
-        line-height: 51.52px;
+        font-size: 38px;
+        line-height: 38px;
         color: black;
+        width: 100%;
 
         span {
           color: #2dbed8;
@@ -54,15 +59,17 @@ html {
       p {
         font-size: 16px;
         line-height: 24px;
-        margin-bottom: 30px;
+        margin-block-start: 0;
       }
 
       a {
         background: #2dbed8;
-        padding: 15px 120px;
+        padding: 15px 0;
         color: white;
         font-size: 20px;
         border-radius: 10px;
+        width: 100%;
+        text-align: center;
       }
     }
   }
