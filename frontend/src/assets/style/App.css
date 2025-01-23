@@ -32,10 +32,10 @@ html {
     height: 60%;
     width: 100%;
     display: flex;
-    justify-content: center;
     flex-direction: column;
     background-image: url(./../Image/welcomePageBG.png);
     background-repeat: no-repeat;
+    padding: 25px 0;
 
     .text {
       padding: 0 40px;
