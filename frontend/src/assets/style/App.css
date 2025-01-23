@@ -33,9 +33,10 @@ html {
     width: 100%;
     display: flex;
     flex-direction: column;
-    background-image: url(./../Image/welcomePageBG.png);
+    background-image: url(/src/assets/Image/welcomePageBG.png);
     background-repeat: no-repeat;
     padding: 25px 0;
+    background-size: 100% 120%;
 
     .text {
       padding: 0 40px;
@@ -91,13 +92,13 @@ html {
   }
 
   p {
-    font-size: 16px;
+    font-size: 15px;
     color: black;
     text-align: center;
     margin-block-end: 0;
 
     &.login-text {
-      font-size: 17px;
+      font-size: 16px;
     }
   }
 
