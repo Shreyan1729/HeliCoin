@@ -8,7 +8,15 @@ import cors from "cors";
 // Initialize app and configure middleware
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+const FRONTEND_URL = "http://localhost:5173"; // Replace this with your frontend URL
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+    credentials: true, // Allow cookies if needed
+  })
+);
 
 // MongoDB connection URI
 const mongoURI =
