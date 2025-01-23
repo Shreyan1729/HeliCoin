@@ -21,7 +21,10 @@ const SignUp = () => {
   };
 
   return (
-    <>
+    <section className="Signup">
+      <h1>Get ready for flight !</h1>
+      <p>Let the license made by your hands</p>
+
       <form onSubmit={handleSubmit}>
         <input name="name" placeholder="Name" onChange={handleChange} />
         <input
@@ -39,8 +42,10 @@ const SignUp = () => {
         <button type="submit">Sign Up</button>
       </form>
 
-      <Link to={"/login"}>Login</Link>
-    </>
+      <p className="login-text">
+        Do you have an account. <br /> Then <Link to={"/login"}>Login</Link>.
+      </p>
+    </section>
   );
 };
 

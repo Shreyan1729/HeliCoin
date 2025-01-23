@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import "./assets/style/App.css";
-import BeforeLogin from "./components/pages/BeforeLogin/BeforeLogin";
-import AfterLogin from "./components/pages/AfterLogin/AfterLogin";
+import BeforeLogin from "./components/CorrectPage/BeforeLogin/BeforeLogin";
+import AfterLogin from "./components/CorrectPage/AfterLogin/AfterLogin";
 import BigScreen from "./components/BigScreen/BigScreen";
 
 const App = () => {
