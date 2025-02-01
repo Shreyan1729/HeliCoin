@@ -148,6 +148,23 @@ app.post("/click-button", authMiddleware, async (req, res) => {
   }
 });
 
+app.get("/user/:id", async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // ✅ GET USER DATA ROUTE
 app.get("/user", authMiddleware, async (req, res) => {
   try {

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { setToken } from "../../../assets/auth";
+import { setToken, zoomIn } from "../../../assets/auth";
+import { signUpGif } from "./../../../assets/image";
+
+import { motion } from "framer-motion";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -22,6 +25,7 @@ const Login = () => {
 
         // Store user data including lastClickTime
         const userData = {
+          _id: data.user._id,
           name: data.user.name,
           email: data.user.email,
           points: data.user.points,
@@ -43,7 +47,14 @@ const Login = () => {
   };
 
   return (
-    <section className="Signup">
+    <motion.section
+      variants={zoomIn(0.1, 0.2)}
+      initial="hidden"
+      whileInView={"show"}
+      className="Signup Login"
+    >
+      <img src={signUpGif} alt="" className="signupGIF" />
+
       <h1>Get ready for flight !</h1>
       <p>Let the license made by your hands</p>
 
@@ -68,7 +79,7 @@ const Login = () => {
       <p className="login-text">
         <Link to={"/signup"}>Create an new account</Link>
       </p>
-    </section>
+    </motion.section>
   );
 };
 

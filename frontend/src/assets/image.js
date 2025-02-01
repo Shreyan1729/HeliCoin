@@ -37,6 +37,7 @@
 // };
 
 import mainLogo from "./Image/mainLogo.png";
+import signUpGif from "./Image/signup.gif";
 import welcomePageBG from "./Image/welcomePageBG.png";
 
-export { mainLogo, welcomePageBG };
+export { mainLogo, signUpGif, welcomePageBG };

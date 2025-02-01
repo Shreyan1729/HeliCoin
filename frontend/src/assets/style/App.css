@@ -137,3 +137,12 @@ html {
     }
   }
 }
+
+.signupGIF {
+  width: 85px;
+}
+.Login {
+  .signupGIF {
+    width: 100px;
+  }
+}

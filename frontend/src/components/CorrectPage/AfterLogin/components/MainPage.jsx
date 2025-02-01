@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getToken, isLoggedIn } from "../../../../assets/auth";
+import { getToken, isLoggedIn, zoomIn } from "../../../../assets/auth";
 import { Link, useNavigate } from "react-router-dom";
-import { dex, earn, home, logo, profile } from "./Images/image";
+import { dex, earn, home, invite, logo, profile } from "./Images/image";
+import { motion } from "framer-motion";
 
 const MainPage = () => {
   const [points, setPoints] = useState(0);
@@ -62,9 +63,7 @@ const MainPage = () => {
       const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
 
       // Update timeLeft state with formatted time
-      setTimeLeft(
-        `${formattedHours}:${formattedMinutes}:${formattedSeconds} left`
-      );
+      setTimeLeft(`${formattedHours}:${formattedMinutes}:${formattedSeconds}`);
 
       // Update the time every second (instead of minute) to reflect seconds accurately
       timer = setTimeout(() => calculateTimeLeft(lastClaimTime), 1000);
@@ -120,8 +119,15 @@ const MainPage = () => {
     }
   };
 
+  const userId = JSON.parse(localStorage.getItem("userData"))?._id;
+
   return (
-    <main className="Home">
+    <motion.main
+      variants={zoomIn(0.1, 0.2)}
+      initial="hidden"
+      whileInView={"show"}
+      className="Home"
+    >
       <div className="top">
         <p>Your approximate share</p>
         <div className="top-logo">
@@ -136,7 +142,7 @@ const MainPage = () => {
             <img src={home} alt="home" />
             Home
           </Link>
-          <Link>
+          <Link to={`/earn?profile=${userId}`}>
             <img src={earn} alt="earn" />
             Earn
           </Link>
@@ -149,11 +155,11 @@ const MainPage = () => {
         </div>
 
         <div className="right">
-          <Link>
+          <Link to={`/profile?profile=${userId}`}>
             <img src={profile} alt="home" />
             Profile
           </Link>
-          <Link>
+          <Link to={"/dex"}>
             <img src={dex} alt="earn" />
             Dex
           </Link>
@@ -170,10 +176,32 @@ const MainPage = () => {
         </button>
 
         <p className={`text ${!buttonDisabled && "active"}`}>
-          {!buttonDisabled ? `Get award` : ` Next reward in ${timeLeft}`}
+          {!buttonDisabled
+            ? `Get your award`
+            : ` Next reward after ${timeLeft}`}
         </p>
       </div>
-    </main>
+
+      <div className="buttons">
+        <div className="row">
+          <Link to={"/invite"}>
+            <img src={invite} alt="" />
+            Invite
+          </Link>
+
+          <button>{`Participate in the waitlist >`}</button>
+        </div>
+
+        <div className="row">
+          <Link to={"/invite"} className="none">
+            <img src={invite} alt="" />
+            Invite
+          </Link>
+
+          <button>{`Check the waitlist >`}</button>
+        </div>
+      </div>
+    </motion.main>
   );
 };
 

@@ -1,3 +1,33 @@
+.icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 25px;
+  color: white;
+  z-index: 5200000;
+}
+
+.right-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 22px;
+  color: white;
+  transform: rotate(180deg);
+  background-color: #3a425f;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  border-radius: 50%;
+  z-index: 5200000;
+
+  &:hover {
+    color: black;
+  }
+}
+
 .Home {
   display: flex;
   align-items: center;
@@ -72,8 +102,11 @@
       }
     }
 
+    .right {
+      top: -10px;
+    }
     .left {
-      top: -40px;
+      top: 10px;
     }
 
     .middle-logo {
@@ -113,6 +146,11 @@
   }
 
   .claim-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
     .claim {
       outline: 0;
       border: none;
@@ -144,10 +182,152 @@
       font-size: 15px;
       text-align: center;
       color: #b75e61;
+      font-weight: 700;
 
       &.active {
         color: green;
       }
     }
   }
+
+  .buttons {
+    margin-top: 50px;
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+        color: black;
+        font-weight: 700;
+        transition: all 0.2s;
+
+        &.none {
+          opacity: 0;
+        }
+
+        img {
+          width: 50px;
+          height: 50px;
+        }
+      }
+
+      &:last-child {
+        margin-top: 10px;
+      }
+
+      button {
+        outline: none;
+        border: none;
+        background-image: url(./../Images/topbg.png);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 60px;
+        color: #a59f9a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 10px 20px;
+        height: 40px;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+.Earn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .earn-button {
+      margin-top: 20px;
+      width: 100%;
+      background-image: url(./../Images/topbg.png);
+      background-repeat: no-repeat;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      background-size: 100%;
+
+      .claim {
+        background-color: #5ddafd;
+        color: black;
+        padding: 0px 15px;
+        font-weight: 700;
+        border-radius: 10px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .bottom {
+    margin-top: 50px;
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.Profile,
+.Dex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  img {
+    width: 150px;
+  }
+
+  p {
+    background: #5ddafd;
+    text-align: center;
+    padding: 15px 30px;
+    font-size: 25px;
+    font-weight: 700;
+    border-radius: 40px;
+    color: black;
+  }
+}
+
+.AboutUs {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url(./../Images/AboutUsBG.jpg);
+  background-size: 100% 100%;
+  background-position: center;
 }

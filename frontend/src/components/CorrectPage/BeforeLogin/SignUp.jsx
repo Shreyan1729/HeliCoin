@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { signUpGif } from "./../../../assets/image";
+
+import { motion } from "framer-motion";
+import { zoomIn } from "../../../assets/auth";
 
 const SignUp = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -21,7 +25,14 @@ const SignUp = () => {
   };
 
   return (
-    <section className="Signup">
+    <motion.section
+      variants={zoomIn(0, 0.2)}
+      initial="hidden"
+      whileInView={"show"}
+      className="Signup"
+    >
+      <img src={signUpGif} alt="" className="signupGIF" />
+
       <h1>Get ready for flight !</h1>
       <p>Let the license made by your hands</p>
 
@@ -45,7 +56,7 @@ const SignUp = () => {
       <p className="login-text">
         Do you have an account. <br /> Then <Link to={"/login"}>Login</Link>.
       </p>
-    </section>
+    </motion.section>
   );
 };
 

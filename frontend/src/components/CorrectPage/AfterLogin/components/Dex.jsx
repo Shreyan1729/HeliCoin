@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const Dex = () => {
   return (
-    <div>Dex</div>
-  )
-}
+    <div className="Dex">
+      <p>Opening Soon</p>
+    </div>
+  );
+};
 
-export default Dex
+export default Dex;
