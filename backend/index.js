@@ -1,89 +1,53 @@
-// Import dependencies
 import express from "express";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cors from "cors";
+import dotenv from "dotenv";
 
-// Initialize app and configure middleware
+// Load environment variables
+dotenv.config();
+
 const app = express();
 app.use(express.json());
 
-const FRONTEND_URL = "http://localhost:5173"; // Replace this with your frontend URL
+// Configure CORS
+const FRONTEND_URL = "http://localhost:5173";
 app.use(
   cors({
     origin: FRONTEND_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
-    credentials: true, // Allow cookies if needed
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 
-// MongoDB connection URI
+// MongoDB connection
 const mongoURI =
   "mongodb+srv://shreyandeyrudra:8mcFnc7gpZGaHWEi@cluster0.ggeww.mongodb.net/?retryWrites=true&w=majority";
-
 mongoose
-  .connect(mongoURI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // User Schema and Model
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
+  name: { type: String, required: true },
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
   points: { type: Number, default: 0 },
-  lastClickTime: Date,
+  lastClickTime: { type: Date, default: null },
 });
 
 const User = mongoose.model("User", userSchema);
 
-const JWT_SECRET = "12345"; // Change this to a secure secret in production
+const JWT_SECRET = process.env.JWT_SECRET || "12345";
 
-// SIGNUP ROUTE
-app.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  try {
-    const user = new User({ name, email, password: hashedPassword });
-    await user.save();
-    res.status(201).json({ message: "User created successfully" });
-  } catch (err) {
-    res.status(500).json({ message: "Error creating user", error: err });
-  }
-});
-
-// LOGIN ROUTE
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ message: "User not found" });
-  }
-
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) {
-    return res.status(400).json({ message: "Invalid password" });
-  }
-
-  const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1h" });
-  res.json({ token, user });
-});
-
-// MIDDLEWARE
+// ✅ Middleware for authentication
 const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) return res.status(401).json({ message: "Access Denied" });
-
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "Access Denied" });
+
     const decoded = jwt.verify(token, JWT_SECRET);
     req.userId = decoded.userId;
     next();
@@ -92,29 +56,114 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-// ADD POINTS
-app.post("/click-button", authMiddleware, async (req, res) => {
-  const user = await User.findById(req.userId);
+// ✅ SIGNUP ROUTE
+app.post("/signup", async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
-  const now = new Date();
-  const lastClickTime = user.lastClickTime || new Date(0);
-  const timeDifference = now - lastClickTime;
+    const existingUser = await User.findOne({ email }).lean();
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
 
-  if (timeDifference < 24 * 60 * 60 * 1000) {
-    return res
-      .status(400)
-      .json({ message: "You can only click the button once in 24 hours" });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ name, email, password: hashedPassword });
+
+    await user.save();
+    res.status(201).json({ message: "User created successfully" });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error creating user", error: err.message });
   }
-
-  user.points += 10;
-  user.lastClickTime = now;
-  await user.save();
-
-  res.json({ message: "Button clicked", points: user.points });
 });
 
-// Start the server
-const PORT = 5000;
+// ✅ LOGIN ROUTE
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email }).lean();
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.json({
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        points: user.points,
+        lastClickTime: user.lastClickTime,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Login error", error: err.message });
+  }
+});
+
+// ✅ CLAIM REWARD ROUTE (Auto Resets at Midnight)
+app.post("/click-button", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const now = new Date();
+    const lastClickTime = user.lastClickTime || new Date(0);
+
+    // Reset at midnight
+    const lastClickDay = lastClickTime.toISOString().split("T")[0];
+    const today = now.toISOString().split("T")[0];
+
+    if (lastClickDay === today) {
+      return res.status(400).json({
+        message:
+          "You have already claimed your reward today! Come back at midnight.",
+      });
+    }
+
+    // Update points
+    user.points += 10;
+    user.lastClickTime = now;
+    await user.save();
+
+    res.json({ message: "✅ Reward claimed!", points: user.points });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error claiming reward", error: err.message });
+  }
+});
+
+// ✅ GET USER DATA ROUTE
+app.get("/user", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password").lean();
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json(user);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error fetching user data", error: err.message });
+  }
+});
+
+// ✅ Start the server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
+  console.log(`🚀 Server running on http://localhost:${PORT}`)
 );

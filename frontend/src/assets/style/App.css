@@ -5,6 +5,9 @@ html {
 .App {
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .WelcomePage {
@@ -79,7 +82,7 @@ html {
 .Signup {
   width: 100%;
   height: 100%;
-  background-color: #fff;
+  background-image: url(./../Image/signupbg.png);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,6 +133,7 @@ html {
       font-size: 17px;
       color: white;
       border-radius: 10px;
+      cursor: pointer;
     }
   }
 }

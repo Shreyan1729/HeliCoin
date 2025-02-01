@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MainPage from "./MainPage";
+import MainPage from "./components/MainPage";
+import "./components/style/style.css";
 
 const AfterLogin = () => {
   return (

@@ -2,6 +2,9 @@ import React from "react";
 import { mainLogo } from "./../../../assets/image";
 import { Link } from "react-router-dom";
 
+import { motion } from "framer-motion";
+import { fadeIn } from "./../../../assets/auth";
+
 const WelcomePage = () => {
   return (
     <div className="WelcomePage">
@@ -9,7 +12,11 @@ const WelcomePage = () => {
         <img src={mainLogo} alt="" />
       </div>
 
-      <main>
+      <motion.main
+        variants={fadeIn("up", 0.1)}
+        initial="hidden"
+        whileInView={"show"}
+      >
         <div className="text">
           <h1>
             Welcome at <br /> <span>HeliCoin</span>
@@ -20,7 +27,7 @@ const WelcomePage = () => {
           </p>
           <Link to="/signup">Get started</Link>
         </div>
-      </main>
+      </motion.main>
     </div>
   );
 };
